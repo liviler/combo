@@ -61,7 +61,8 @@ def main():
     lat_exp=output.transSymbolsToLatex(res7)
     print('latex expression:\n',lat_exp,'\n')
 
-
+## TODO 
+## 要将latex公式输出实现
 
     # tex_request='https://www.zhihu.com/equation?tex='+lat_exp
     # print(tex_request)
