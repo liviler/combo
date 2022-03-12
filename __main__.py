@@ -62,7 +62,10 @@ def main():
     print('latex expression:\n',lat_exp,'\n')
 
 ## TODO 
-## 要将latex公式输出实现
+## 1. 要将latex公式输出实现
+## 2. 测试之前出现的1体二体之间出现符号的事故原因
+## 3. 测试是否满足反对称性质
+## 4. 研究如何导出未amc对接口
 
     # tex_request='https://www.zhihu.com/equation?tex='+lat_exp
     # print(tex_request)
