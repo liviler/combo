@@ -88,7 +88,7 @@ class Filter:
                         elif(bodyType==0):
                             res+=i
                     else:# like  A[{},{}]
-                        if(i.base==A and len(i.args[1]==bodyType)):
+                        if(i.base==A and len(i.args[1])==bodyType):
                             res+=i
                         elif(i.base!=A and bodyType==0):
                             res+=i
