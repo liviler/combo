@@ -9,21 +9,26 @@ sy.init_printing()
 
 
 def transSymbolsToLatex(tmp):
+    #TODO :
+    #Maybe I can use stack to achieve this function
     str_exp=str(tmp)
     str_lax=''
-    state_body=0
-    state_idx=0
+    state_body=0#1  means process a multi terms 
+    state_idx=0# =1 finish processing  the up idx,=2 means finish processing the dow idx.
+    pos=0# store the work position of str_exp
     for i in str_exp:
         if(state_body==0 and i=='['):
             str_lax+='^'
             state_body=1
-        elif(state_idx==0 and i=='}'):
+        elif(state_body==1 and i=='('):
+            str_lax+='{'
+        elif(state_body==1 and state_idx==0 and i==')'):
             str_lax+='}'
             state_idx=1
         elif(state_idx==1 and i==','):
             str_lax+='_'
             state_idx=2
-        elif(state_idx==2 and i=='}'):
+        elif(state_body==1 and state_idx==2 and i==')'):
             str_lax+='}'
             state_idx=0
         elif(state_body==1 and i==']'):
@@ -38,8 +43,11 @@ def transSymbolsToLatex(tmp):
             str_lax+='\\lambda'
         elif(i==chr(948)):
             str_lax+='\\delta'
+        elif(i==',' and str_exp[pos+1]==')'):# do not show ',' when  up or down idx only have one element.
+            pass
         else:
             str_lax+=i
+        pos+=1
     return str_lax
 
 def jupyterTexDisplay(lat_exp):

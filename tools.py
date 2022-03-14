@@ -3,8 +3,8 @@ from sympy import simplify
 
 
 X=IndexedBase('X')
-Y=IndexedBase('Y')
-A=IndexedBase('A')
+Y=IndexedBase('Y')#  X,Y just used to present the type of different input expression.like some multi-expr:X[{},{}]*Y[{},{}] or add-expr:X[{},{}]+Y[{},{}] 
+A=IndexedBase('A')# A used to identify the exist of it in expression.
 xi=IndexedBase(chr(958))
 lamda=IndexedBase(chr(955))
 delta=IndexedBase(chr(948))
@@ -46,7 +46,7 @@ class SmplifyRule:
 class Filter:
     def filterbody(terms,bodyType):
         if (type(terms)!=type(X[{},{}]+Y[{},{}])):#input terms like A[{},{}]*B[{},{}] or A[{},{}]
-            if(type(terms)==type(X[{},{}*Y[{},{}]])):#like A[{},{}]*B[{},{}] or -A[{},{}]*B[{},{}]
+            if(type(terms)==type(X[{},{}]*Y[{},{}])):#like A[{},{}]*B[{},{}] or -A[{},{}]*B[{},{}]
                 if (type(terms.args[0])==type(A[{},{}])):#if input terms like A[{},{}]*B[{},{}]
                     firstTerm=terms.args[0]
                     if(firstTerm.base==A and len(firstTerm.args[1])==bodyType ):
@@ -88,7 +88,7 @@ class Filter:
                         elif(bodyType==0):
                             res+=i
                     else:# like  A[{},{}]
-                        if(i.base==A and len(i.args[1]==bodyType)):
+                        if(i.base==A and len(i.args[1])==bodyType):
                             res+=i
                         elif(i.base!=A and bodyType==0):
                             res+=i
@@ -126,7 +126,7 @@ def uniteSimilarTerms(exp):
             comTermsDivideCom+=otherComTermsDivideCom
             otherTerms=exp-(comTermsDivideCom*com).expand()
             break
-    res=com*(uniteSimilarTerms(comTermsDivideCom))+uniteSimilarTerms(otherTerms)
+    res=com*(uniteSimilarTerms(comTermsDivideCom))+uniteSimilarTerms(otherTerms)#recurse it. 
     return res
 
 
