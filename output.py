@@ -9,6 +9,8 @@ sy.init_printing()
 
 
 def transSymbolsToLatex(tmp):
+    #TODO :
+    #Maybe I can use stack to achieve this function
     str_exp=str(tmp)
     str_lax=''
     state_body=0#1  means process a multi terms 
