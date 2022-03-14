@@ -21,7 +21,7 @@ r=IndexedBase('r')
 A=IndexedBase('A')
 G=IndexedBase('G')
 H=IndexedBase('H')
-
+delta=IndexedBase(chr(948))
 
 
 def Z(Low,Up)->list:
@@ -32,38 +32,48 @@ def main():
     my_wick_test=Wick(Z([a],[b]),Z([p,q],[r,s]))
     my_wick_test.commmutate()
     res1=my_wick_test.cmt
-    print('commuteResult:\n',res1,'\n')
+    # print('commuteResult:\n',res1,'\n')
 
     #apply xiRule and natRule
     res2=SmplifyRule.xiRule(res1)
     res3=SmplifyRule.natRule(res2)
-    print('Apply xiRule and natRule Result:\n',res3,'\n')
+    # print('Apply xiRule and natRule Result:\n',res3,'\n')
 
     #nuiltiply the head and  form allTerms 
     allTerms=res3*G[(a,),(b,)]*H[(p,q),(r,s)]
     allTerms=allTerms.expand()
-    print('mutiply the head Result:\n',allTerms,'\n')
+    # print('mutiply the head Result:\n',allTerms,'\n')
+    full1B2B2B=Filter.filterbody(allTerms,2)
+    # print(output.transSymbolsToLatex(full1B2B2B))
+    res=canonical.canonicalize(full1B2B2B)
+    print(res)
+    # termIn2B=G[(a,),(b,)]*H[(p,q),(r,s)]*A[(p,q),(b,s)]*delta[(a,),(r,)]
+    # print(canonical.canonicalOrder(termIn2B))
+    termIn2BCom=uniteSimilarTerms(res)
+    print(termIn2BCom)
+    print(output.transSymbolsToLatex(termIn2BCom))
+
 
 
     #canonical it (remove delta Terms)
     res5=canonical.canonicalize(allTerms)
-    print('Canonicalize it Result:\n',res5,'\n')
+    # print('Canonicalize it Result:\n',res5,'\n')
 
     #unite the similiar terms
     res6=uniteSimilarTerms(res5)
-    print('unite the similiar terms:\n',res6,'\n')
+    # print('unite the similiar terms:\n',res6,'\n')
 
     #Filter x-body terms:
     res7=Filter.filterbody(res5,2)
-    print('Terms of 2bodys in canonicalized Result:\n',res7,'\n')
+    # print('Terms of 2bodys in canonicalized Result:\n',res7,'\n')
 
     #Trans to latex:
     lat_exp=output.transSymbolsToLatex(res7)
-    print('latex expression:\n',lat_exp,'\n')
+    # print('latex expression:\n',lat_exp,'\n')
 
 ## TODO 
-## 1. 要将latex公式输出实现
-## 2. 测试之前出现的1体二体之间出现符号的事故原因
+## 1. [√]要将latex公式输出实现
+## 2. [√]测试之前出现的1体二体之间出现符号的事故原因
 ## 3. 测试是否满足反对称性质
 ## 4. 研究如何导出未amc对接口
 
@@ -73,5 +83,6 @@ def main():
 
     # lat_exp='$'+lat_exp+'$'
     # mathtext.math_to_image(lat_exp, r'.\demo_1.png')
+    
 
 main()
