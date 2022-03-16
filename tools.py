@@ -1,6 +1,6 @@
 from sympy import IndexedBase#用于存储指标
 from sympy import simplify
-
+from sympy import symbols
 
 X=IndexedBase('X')
 Y=IndexedBase('Y')#  X,Y just used to present the type of different input expression.like some multi-expr:X[{},{}]*Y[{},{}] or add-expr:X[{},{}]+Y[{},{}] 
@@ -42,7 +42,6 @@ class SmplifyRule:
         return simplify(res)
 
 
-
 class Filter:
     def filterbody(terms,bodyType):
         if (type(terms)!=type(X[{},{}]+Y[{},{}])):#input terms like A[{},{}]*B[{},{}] or A[{},{}]
@@ -77,7 +76,6 @@ class Filter:
                             if(firstTerm.base==A and len(firstTerm.args[1])==bodyType ):
                                 res+=i
                             elif(firstTerm.base!=A and bodyType==0):
-                                print(i)
                                 res+=i
                         elif(type(i.args[1])==type(A[{},{}])):#if input terms like -A[{},{}]*B[{},{}]
                             secondTerm=i.args[1]
@@ -130,6 +128,54 @@ def uniteSimilarTerms(exp):
     return res
 
 
+def _tupleMultTosimp(tupleUp,tupleLo):
+    '''
+    Remove the repetitive index of element in Up and Lo.
+    '''
+    up=[]
+    lo=[]
+    for i in tupleUp:
+        up.append(symbols(str(i)[0]))
+        indicesSet.add(str(i)[0])
+    for i in tupleLo:
+        lo.append(symbols(str(i)[0]))
+        indicesSet.add(str(i)[0])
+    return tuple(up),tuple(lo)
+
+
+def indicesMultToSimp(exp):
+    global indicesSet
+    indicesSet=set()
+    if (type(exp)!=type(X[{},{}]+Y[{},{}])):#input exp like A[{},{}]*B[{},{}] or A[{},{}]
+        res=1
+        if(type(exp)==type(X[{},{}]*Y[{},{}])):#like A[{},{}]*B[{},{}] or -A[{},{}]*B[{},{}]
+            for i in exp.args:
+                if(type(i)==type(A[{},{}])):
+                    res*=i.base[_tupleMultTosimp(i.args[1],i.args[2])]
+                else: res*=i
+        else:# like  A[{},{}] or -A[{},{}] #Impossibly occur because commute Terms would never have such terms
+            i=exp
+            res=i.base[_tupleMultTosimp(i.args[1],i.args[2])]
+    else:#exp like A[{},{}]*B[{},{}] + C[{},{}]*D[{},{}]-E[]F[]
+        res=0
+        for i in exp.args:#i:(A[{},{}]*B[{},{}] ,   C[{},{}],   -D[{},{}]*E[{},{}])
+            if(type(i)==type(X[{},{}]*Y[{},{}])):#i like A[{},{}]*B[{},{}] or -A[{},{}]*B[{},{}]
+                tmp=1
+                for j in i.args:#j (-1,A,B)
+                    if(type(j)==type(A[{},{}])):
+                        tmp*=j.base[_tupleMultTosimp(j.args[1],j.args[2])]
+                    else:tmp*=j
+                res+=tmp
+            else:# likeA[{},{}]
+                res+=i.base[_tupleMultTosimp(i.args[1],i.args[2])]
+    indicesList=list(indicesSet)
+    indicesList.sort()
+    indicesSymbols=[]
+    for i in indicesList:
+        indicesSymbols.append(symbols(i))
+    
+    return res,tuple(indicesSymbols)
+            
 
 
 
