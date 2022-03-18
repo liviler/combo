@@ -198,6 +198,7 @@ class Wick:
         positiveWick.generalizedWick()
         negativeWick=Wick([RUp,RLo],[LUp,LLo])
         negativeWick.generalizedWick()
+        self.gw=positiveWick.gw
         self.cmt=positiveWick.gw-negativeWick.gw
 
 
@@ -213,9 +214,8 @@ if __name__=='__main__':
     r=IndexedBase('r')
     from sympy import false, true
 
-
     my_wick_test=Wick([(a,),(b,)],[(p,q),(r,s)])
-    my_wick_test.commmutate(allSimplifyRule=true)
+    my_wick_test.commmutate()
 
     res=my_wick_test.cmt
     print(res)
