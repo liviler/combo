@@ -8,7 +8,7 @@ import webbrowser
 
 from wickcaculate import Wick 
 import canonical
-from tools import SmplifyRule,Filter,uniteSimilarTerms
+from tools import SmplifyRule,Filter,uniteSimilarTerms,indicesMultToSimp
 import output
 
 
@@ -44,14 +44,20 @@ def main():
     allTerms=allTerms.expand()
     # print('mutiply the head Result:\n',allTerms,'\n')
     full1B2B2B=Filter.filterbody(allTerms,2)
+    #print('full1B2B2B',full1B2B2B,"\n")
     # print(output.transSymbolsToLatex(full1B2B2B))
     res=canonical.canonicalize(full1B2B2B)
-    print(res)
+    # print(res)
     # termIn2B=G[(a,),(b,)]*H[(p,q),(r,s)]*A[(p,q),(b,s)]*delta[(a,),(r,)]
     # print(canonical.canonicalOrder(termIn2B))
     termIn2BCom=uniteSimilarTerms(res)
-    print(termIn2BCom)
-    print(output.transSymbolsToLatex(termIn2BCom))
+    #print('termIn2Bcom',res,'\n')
+    termSig,indicesSet=indicesMultToSimp(res)
+    #print('indicesSet',indicesSet)
+    #print('termSig',termSig,'\n')
+
+    # print(termIn2BCom)
+    #print(output.transSymbolsToLatex(termIn2BCom),'\n')
 
 
 
@@ -70,6 +76,7 @@ def main():
     #Trans to latex:
     lat_exp=output.transSymbolsToLatex(res7)
     # print('latex expression:\n',lat_exp,'\n')
+    output.amcInputFIle(termSig,indicesSet)
 
 ## TODO 
 ## 1. [√]要将latex公式输出实现
