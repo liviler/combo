@@ -10,7 +10,7 @@ lamda=IndexedBase(chr(955))
 delta=IndexedBase(chr(948))
 n=IndexedBase('n')
 
-class SmplifyRule:
+class SimplifyRule:
     def xiRule(exp):
         expArgs=exp.args#表达式按照加减分成元组不同元素
         res=0

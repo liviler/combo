@@ -2,13 +2,9 @@
 
 from sympy import IndexedBase
 
-from urllib import request
-import webbrowser
-
-
 from wickcaculate import Wick 
 import canonical
-from tools import SmplifyRule,Filter,uniteSimilarTerms,indicesMultToSimp
+from tools import SimplifyRule,Filter,uniteSimilarTerms,indicesMultToSimp
 import output
 
 

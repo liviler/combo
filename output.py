@@ -6,7 +6,8 @@
 from IPython.display import display, Latex#latex公式输出
 import sympy as sy
 sy.init_printing()
-from tools import uniteSimilarTerms
+
+from .tools import uniteSimilarTerms
 
 
 def transSymbolsToLatex(tmp):
@@ -140,7 +141,7 @@ def amcInputFIle(exp,indices):
     equation=amcLeft+'='+amcRight
     #amc document
     amctxt=declareR+ declareG+declareH+declareLambda+declare_n+equation
-    with open('output.amc', 'w', encoding='utf-8') as f:
+    with open('./output.amc', 'w', encoding='utf-8') as f:
         f.write(amctxt)
         print('\nSave output.amc successfully!\n' )
 
