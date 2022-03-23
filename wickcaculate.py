@@ -101,14 +101,13 @@ class Wick:
     '''
     
     '''
-    _LUp,_LLo,_RUp,_RLo=None,None,None,None
 
     def __init__(self,LUpLo,RUpLo):
-        Wick._LUp,Wick._LLo,Wick._RUp,Wick._RLo=LUpLo[0],LUpLo[1],RUpLo[0],RUpLo[1]
+        self._LUp,self._LLo,self._RUp,self._RLo=LUpLo[0],LUpLo[1],RUpLo[0],RUpLo[1]
         self.gw=0#generalizedWick result
         self.cmt=0#commutate result
     
-    def _MatchPartitions(pUp,pLo):
+    def _MatchPartitions(self,pUp,pLo):
         '''
         将划分出的上标和下标的长度一样进行匹配。并且要求内部的子表的长度也要一样，这样才能形成符号的匹配。
         '''
@@ -125,7 +124,7 @@ class Wick:
         return res
 
 
-    def _EvaluateConstraction(full_i_k,LUp,LLo,RUp,RLo):
+    def _EvaluateConstraction(self,full_i_k,LUp,LLo,RUp,RLo):
         '''
         evaluate a contraction for a specific combination of indices
         '''
@@ -141,7 +140,7 @@ class Wick:
         return res
 
 
-    def _ConsturctTerms(part_i,idxUp,idxLo,LUp,LLo,RUp,RLo):#part_i表示此时只是挑选出上下标组合情况的一种，也就是一种输出方式。
+    def _ConsturctTerms(self,part_i,idxUp,idxLo,LUp,LLo,RUp,RLo):#part_i表示此时只是挑选出上下标组合情况的一种，也就是一种输出方式。
         '''
         '''
         sigUp=_ListOperations.signature(idxUp)#确定原来符号的排序情况，应为并不会所有的输入符号会按照递增顺序输入。
@@ -171,9 +170,9 @@ class Wick:
                         #tmpA*=symbols_laxexp('A',full[i][k])#将指标对应符号A
                         tmpA*=Alpha[tuple(full[i][k][0]),tuple(full[i][k][1])]
                     else:
-                        tmpA*=Wick._EvaluateConstraction(full[i][k],LUp,LLo,RUp,RLo)#对应其他符号xi和lambda
+                        tmpA*=self._EvaluateConstraction(full[i][k],LUp,LLo,RUp,RLo)#对应其他符号xi和lambda
                 expr+=_ListOperations.signature(termIndexUp)*_ListOperations.signature(termIndexLo)*tmpA
-                tmplambda*=Wick._EvaluateConstraction(full[i][j],LUp,LLo,RUp,RLo)
+                tmplambda*=self._EvaluateConstraction(full[i][j],LUp,LLo,RUp,RLo)
             expr+=_ListOperations.signature(termIndexUp)*_ListOperations.signature(termIndexLo)*tmplambda
 
         expr*=sigUp*sigLo
@@ -181,21 +180,23 @@ class Wick:
 
     
     def generalizedWick(self):
-        idxUp=Wick._LUp + Wick._RUp
-        idxLo=Wick._LLo + Wick._RLo
+        idxUp=self._LUp + self._RUp
+        idxLo=self._LLo + self._RLo
         partUp=_ListOperations.sortPartitions(_ListOperations.setPartitions(idxUp))
         partLo=_ListOperations.sortPartitions(_ListOperations.setPartitions(idxLo))
-        part=Wick._MatchPartitions(partUp,partLo)#part是挑选出来的所有可能的上标和下标的集合划分子集的长度也相互对应情况。这是可能输出的符号的上下标。
+        part=self._MatchPartitions(partUp,partLo)#part是挑选出来的所有可能的上标和下标的集合划分子集的长度也相互对应情况。这是可能输出的符号的上下标。
         for i in range(len(part)):
-          self.gw+=Wick._ConsturctTerms(part[i],idxUp,idxLo,Wick._LUp,Wick._LLo,Wick._RUp,Wick._RLo)
+          self.gw+=self._ConsturctTerms(part[i],idxUp,idxLo,self._LUp,self._LLo,self._RUp,self._RLo)
     
     def commmutate(self):
         '''
         计算对易式
         '''
-        LUp,LLo,RUp,RLo=Wick._LUp,Wick._LLo,Wick._RUp,Wick._RLo
+        LUp,LLo,RUp,RLo=self._LUp,self._LLo,self._RUp,self._RLo
+
         positiveWick=Wick([LUp,LLo],[RUp,RLo])
         positiveWick.generalizedWick()
+        
         negativeWick=Wick([RUp,RLo],[LUp,LLo])
         negativeWick.generalizedWick()
         self.gw=positiveWick.gw
