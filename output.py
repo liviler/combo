@@ -90,10 +90,10 @@ def _transSymbolExpToAmcExp(exp,indices):
         for j in i.args:
             if(str(j)[0]!='A'):
                 tmp*=j
-            else:
+            else:#get retain indices from A trems.
                 retainIndices=j.args[1]+j.args[2]
         aftreRemoveAExp+=tmp
-    rightTerms=uniteSimilarTerms(aftreRemoveAExp)
+    # rightTerms=uniteSimilarTerms(aftreRemoveAExp)
     # Form left term of amc equation
     leftSub=_extractIndicesFromTuple(retainIndices)
     # Form right terms of amc equation

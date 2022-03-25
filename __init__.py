@@ -17,7 +17,7 @@ class bodys:
     def __init__(self,leftIndices:list[list],rightIndices:list[list] ) -> None:
         leftIndices=[list(map(lambda x:symbols(x),i))for i in leftIndices]
         rightIndices=[list(map(lambda x:symbols(x),i))for i in rightIndices]
-        self.incices=[leftIndices,rightIndices]
+        self.indices=[leftIndices,rightIndices]
 
     def help(self):
         '''
@@ -28,9 +28,7 @@ class bodys:
         atrMsg=[
             ["gw","Generalized Wick Result"],
             ["cmt", "gw1 - gw2"],
-            ["cmtXN","Apply xiRule and natRule to cmt"],
-            ["cmtXi","Apply xiRule to cmt"],
-            ["cmtNat","Apply natRule to cmt"],
+            ["cmtRule","The result after applying xiRule or natRule (or both)to cmt"],
             ["allTerms","All Terms after applying  xiRule and natRule"],
             ["filterTerms","Filter Result"],
             ["canon","Canonicalized Result(Deal the deal term and rename the indices)"], 
@@ -60,6 +58,7 @@ class bodys:
         fucMsg=[
             ["texExp","Trans the expression to latex."],
             ["uniteSame","Combine the same terms."],
+            ["jupyterDisplay","Display the expression by latex form in jupyter"],
         ]
         for i in fucMsg:
             print((i[0]+':').rjust(15),i[1])
@@ -68,7 +67,7 @@ class bodys:
         '''
         Display all step result by latex in jupyter.If you just want to show the latex expression, please set  the parameter: jupyter="no".
         '''
-        attributes=["gw","cmt","cmtXN","cmtXi","cmtNat","allTerms","filterTerms","canon",]
+        attributes=["gw","cmt","cmtRule","allTerms","filterTerms","canon",]
         if jupyter=="yes":
             for i in attributes:
                 try:
@@ -95,7 +94,7 @@ class bodys:
                     print('No attribute called:',i )
 
     def commutate(self):
-        wickCase=Wick(self.incices[0],self.incices[1])
+        wickCase=Wick(self.indices[0],self.indices[1])
         wickCase.commmutate()
         self.gw=wickCase.gw
         self.cmt=wickCase.cmt
@@ -106,14 +105,14 @@ class bodys:
         Chose your rule that apply to commutate result. The default value of ruleType is 'both', and you can set 'xi' or 'nat' instead.
         '''
         if ruleType=='both':
-            self.cmtXN=SimplifyRule.natRule(SimplifyRule.xiRule(self.cmt))
+            self.cmtRule=SimplifyRule.natRule(SimplifyRule.xiRule(self.cmt))
         elif ruleType=='xi':
-            self.cmtXi=SimplifyRule.xiRule(self.cmt)
+            self.cmtRule=SimplifyRule.xiRule(self.cmt)
         elif ruleType=='nat':
-            self.cmtNat=SimplifyRule.natRule(self.cmt)
+            self.cmtRule=SimplifyRule.natRule(self.cmt)
    
     def regulate(self,filterbody=None):
-        self.allTerms=(G[tuple(self.incices[0][0]),tuple(self.incices[0][1])]*H[tuple(self.incices[1][0]),tuple(self.incices[1][1])]*self.cmtXN).expand()
+        self.allTerms=(G[tuple(self.indices[0][0]),tuple(self.indices[0][1])]*H[tuple(self.indices[1][0]),tuple(self.indices[1][1])]*self.cmtRule).expand()
         #Fliter
         if filterbody!=None and type(filterbody)==int:
             global filterBodyType
@@ -129,15 +128,31 @@ class bodys:
     def amcExport(self):
         output.amcInputFIle(self.canon,self.indicesSet)
 
-    def amcEnd(self,fliterbody=None):
+    def amcEnd(self,applyRule="both",fliterbody=None):
         self.commutate()
-        self.applyRule()
+        print('Finish commutate!')
+        self.applyRule(applyRule)
+        print('Finish apply Rule!')
         self.regulate(fliterbody)
+        print('Finish filter'+str(fliterbody)+'body,and regulate it!')
+        print('Start form amc document!')
         self.amcExport()
 
 def texExp(exp):
     lat_exp=output.transSymbolsToLatex(exp)
     return lat_exp
+def filterbody(exp,bodyType):
+    '''
+    Filter input bodyType from exp.
+    '''
+    return Filter.filterbody(exp,bodyType)
+
+def jupyterDisplay(exp):
+    output.jupyterTexDisplay(texExp(exp))
 
 def uniteSame(exp):
     return uniteSimilarTerms(exp.expand())
+
+#TODO
+#1. tools.uniteSimilarTerms can't deal with n terms.
+#2. uniteSame can't deal with allTerms in 2B2B
