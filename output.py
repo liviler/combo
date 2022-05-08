@@ -6,7 +6,8 @@
 from IPython.display import display, Latex#latex公式输出
 import sympy as sy
 sy.init_printing()
-from tools import uniteSimilarTerms
+
+from .tools import uniteSimilarTerms
 
 
 def transSymbolsToLatex(tmp):
@@ -89,10 +90,10 @@ def _transSymbolExpToAmcExp(exp,indices):
         for j in i.args:
             if(str(j)[0]!='A'):
                 tmp*=j
-            else:
+            else:#get retain indices from A trems.
                 retainIndices=j.args[1]+j.args[2]
         aftreRemoveAExp+=tmp
-    rightTerms=uniteSimilarTerms(aftreRemoveAExp)
+    # rightTerms=uniteSimilarTerms(aftreRemoveAExp)
     # Form left term of amc equation
     leftSub=_extractIndicesFromTuple(retainIndices)
     # Form right terms of amc equation
@@ -140,7 +141,7 @@ def amcInputFIle(exp,indices):
     equation=amcLeft+'='+amcRight
     #amc document
     amctxt=declareR+ declareG+declareH+declareLambda+declare_n+equation
-    with open('output.amc', 'w', encoding='utf-8') as f:
+    with open('./output.amc', 'w', encoding='utf-8') as f:
         f.write(amctxt)
         print('\nSave output.amc successfully!\n' )
 

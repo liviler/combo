@@ -9,6 +9,13 @@
 
 
 #use tuple to store indices and use list to process indices.DO NOT USEset!!
+
+from sympy import IndexedBase
+from sympy import symbols
+X=IndexedBase('X')
+delta=IndexedBase(chr(948))
+n=IndexedBase('n')
+
 def _selectDeltaTerms(_inputTerms):
     _deltaTerms=1
     _otherTerms=1

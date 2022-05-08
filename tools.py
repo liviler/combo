@@ -10,7 +10,7 @@ lamda=IndexedBase(chr(955))
 delta=IndexedBase(chr(948))
 n=IndexedBase('n')
 
-class SmplifyRule:
+class SimplifyRule:
     def xiRule(exp):
         expArgs=exp.args#表达式按照加减分成元组不同元素
         res=0
@@ -144,6 +144,9 @@ def _tupleMultTosimp(tupleUp,tupleLo):
 
 
 def indicesMultToSimp(exp):
+    ''''
+    The indices of canonicalize result are repetitive. This function is designed to simplify the indices.  
+    '''
     global indicesSet
     indicesSet=set()
     if (type(exp)!=type(X[{},{}]+Y[{},{}])):#input exp like A[{},{}]*B[{},{}] or A[{},{}]
