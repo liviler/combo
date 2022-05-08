@@ -14,7 +14,7 @@ delta=IndexedBase(chr(948))
 
 
 class bodys:
-    def __init__(self,leftIndices:list[list],rightIndices:list[list] ) -> None:
+    def __init__(self, leftIndices, rightIndices) -> None:
         leftIndices=[list(map(lambda x:symbols(x),i))for i in leftIndices]
         rightIndices=[list(map(lambda x:symbols(x),i))for i in rightIndices]
         self.indices=[leftIndices,rightIndices]

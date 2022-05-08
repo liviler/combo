@@ -144,6 +144,9 @@ def _tupleMultTosimp(tupleUp,tupleLo):
 
 
 def indicesMultToSimp(exp):
+    ''''
+    The indices of canonicalize result are repetitive. This function is designed to simplify the indices.  
+    '''
     global indicesSet
     indicesSet=set()
     if (type(exp)!=type(X[{},{}]+Y[{},{}])):#input exp like A[{},{}]*B[{},{}] or A[{},{}]
